@@ -1,8 +1,17 @@
-cmake_minimum_required(VERSION 3.15.0)
-project(Markdown)
+cmake_minimum_required(VERSION 3.15)
+project(MarkdownEditor)
+
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/mdfile")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/edit")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/sym")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/utils")
 AUX_SOURCE_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/src" SRC)
+AUX_SOURCE_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/src/mdfile" SRC)
+AUX_SOURCE_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/src/edit" SRC)
+AUX_SOURCE_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/src/utils" SRC)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
-add_executable(markdown ${SRC})
+add_executable(md_editor ${SRC})
