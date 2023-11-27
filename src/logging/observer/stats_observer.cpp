@@ -27,10 +27,7 @@ auto StatsObserver::Respose(const State& state) -> void {
     return;
   }
   if (kCommandMap.at(parms[0]) == CommandType::kClose) {
-    if (parms.size() < 2) {
-      return;
-    }
-    int index = atoi(parms[1].c_str()) - 1;
+    int index = GetIntFromParms(parms, 1) - 1;
     if (index < 0 || index >= state.mdfiles.size()) {
       return;
     }

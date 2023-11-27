@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
+#define SESSION_FLAG "session start at"
 class StateSubject;
 class EditCmd;
 class MdFile;
@@ -45,6 +46,6 @@ class MarkdownEditor {
   auto ListTree() -> void;
   auto DirTree(const std::string& dir) -> void;
 
-  auto ShowHistory() -> void;
-  auto ShowStats() -> void;
+  auto ShowHistory(int num) -> void;
+  auto ShowStats(const std::string& arg) -> void;
 };

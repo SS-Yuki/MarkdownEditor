@@ -1,6 +1,7 @@
 #include "markdown_editor.h"
 
 #include <algorithm>
+#include <climits>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -66,15 +67,17 @@ auto MarkdownEditor::Launch() -> void {
       case kSwitch: {
         if (parms.size() < 2) {
           PrintErr("Usage: switch 文件序号");
+          continue;
         }
-        Switch(atoi(parms[1].c_str()));
+        Switch(GetIntFromParms(parms, 1));
         break;
       }
       case kClose: {
         if (parms.size() < 2) {
           PrintErr("Usage: close 文件序号");
+          continue;
         }
-        CloseFile(atoi(parms[1].c_str()));
+        CloseFile(GetIntFromParms(parms, 1));
         break;
       }
 
@@ -124,19 +127,24 @@ auto MarkdownEditor::Launch() -> void {
         break;
       }
       case kDirTree: {
-        DirTree(parms[1]);
+        std::string arg;
+        if (parms.size() > 1) {
+          arg = parms[1];
+        }
+        DirTree(arg);
         break;
       }
 
       case kHistory: {
-        ShowHistory();
+        ShowHistory(GetIntFromParms(parms, 1));
         break;
       }
       case kStats: {
-        if (parms.size() < 2) {
-          PrintErr("Usage: switch [n]");
+        std::string arg;
+        if (parms.size() > 1) {
+          arg = parms[1];
         }
-        ShowStats();
+        ShowStats(arg);
         break;
       }
       case kExit: {
@@ -305,6 +313,41 @@ auto MarkdownEditor::DirTree(const std::string& dir) -> void {
   mdfiles_[cur_file_no_]->ListDirTree(dir);
 }
 
-auto MarkdownEditor::ShowHistory() -> void {}
+auto MarkdownEditor::ShowHistory(int num) -> void {
+  if (num < 0) {
+    num = INT_MAX;
+  }
+  std::string history_path = std::string(LOG_PATH) + std::string(HISTORY_LOG);
+  std::fstream log_file(history_path, std::ios::in);
+  std::vector<std::string> log_items;
+  std::string log_item;
+  while (std::getline(log_file, log_item)) {
+    if (log_item.find(SESSION_FLAG) != 0) {
+      log_items.push_back(log_item);
+    }
+  }
+  log_items.pop_back();
+  int start = log_items.size() - num;
+  start = (start < 0) ? 0 : start;
+  for (int i = start; i < log_items.size(); i++) {
+    std::cout << log_items[i] << std::endl;
+  }
+  log_file.close();
+}
 
-auto MarkdownEditor::ShowStats() -> void {}
+auto MarkdownEditor::ShowStats(const std::string& arg) -> void {
+  if (arg == "all") {
+    for (const auto& file : mdfiles_) {
+      std::string interval =
+          ShowTimeInterval(file->start_tp(), std::chrono::system_clock::now());
+      std::cout << file->url() << " " << interval << std::endl;
+    }
+  } else {
+    if (mdfiles_.empty()) {
+      return;
+    }
+    std::string interval = ShowTimeInterval(mdfiles_[cur_file_no_]->start_tp(),
+                                            std::chrono::system_clock::now());
+    std::cout << mdfiles_[cur_file_no_]->url() << " " << interval << std::endl;
+  }
+}

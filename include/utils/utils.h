@@ -9,3 +9,4 @@ auto IsNumber(const std::string& str) -> bool;
 auto GetCurTime() -> std::string;
 auto ShowTimeInterval(std::chrono::system_clock::time_point start,
                       std::chrono::system_clock::time_point end) -> std::string;
+auto GetIntFromParms(const std::vector<std::string>& parms, int index) -> int;

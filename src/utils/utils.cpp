@@ -1,6 +1,7 @@
 #include "utils.h"
 
 #include <chrono>
+#include <climits>
 #include <ctime>
 #include <iostream>
 #include <sstream>
@@ -62,4 +63,15 @@ auto ShowTimeInterval(std::chrono::system_clock::time_point start,
   }
   ret += std::to_string(interval.count()) + std::string(" 秒 ");
   return ret;
+}
+
+auto GetIntFromParms(const std::vector<std::string>& parms, int index) -> int {
+  if (index < 0 || index >= parms.size()) {
+    return -1;
+  }
+  try {
+    return std::stoi(parms[index]);
+  } catch (const std::exception& e) {
+    return -1;
+  }
 }

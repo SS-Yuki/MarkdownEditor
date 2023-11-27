@@ -52,6 +52,10 @@ auto MdFile::ListTree() -> void {
 }
 auto MdFile::ListDirTree(const std::string& dir) -> void {
   UpdateTree();
+  if (dir.empty()) {
+    root_->Display(0, 0);
+    return;
+  }
   auto list = list_->list();
   for (const auto& mdep : list) {
     std::string str = mdep.get()->ShowElem().content;
