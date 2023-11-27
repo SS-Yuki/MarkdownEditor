@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "common.h"
+
 #define SESSION_FLAG "session start at"
 class StateSubject;
 class EditCmd;
@@ -22,6 +24,7 @@ class MarkdownEditor {
   std::unordered_map<std::string, std::shared_ptr<EditCmd>> redo_map_;
   int cur_file_no_;
   std::string cur_file_url_;
+  CommandType last_command_;
 
   std::shared_ptr<StateSubject> state_subject_;
 

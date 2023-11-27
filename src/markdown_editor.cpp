@@ -26,7 +26,8 @@
 #include "stats_observer.h"
 #include "utils.h"
 
-MarkdownEditor::MarkdownEditor() : cur_file_no_(-1) {
+MarkdownEditor::MarkdownEditor()
+    : cur_file_no_(-1), last_command_(CommandType::kInvalid) {
   state_subject_ = std::make_shared<StateSubject>(mdfiles_);
   std::string history_path = std::string(LOG_PATH) + std::string(HISTORY_LOG);
   std::string stats_path = std::string(LOG_PATH) + std::string(STATS_LOG);
@@ -43,6 +44,7 @@ auto MarkdownEditor::Launch() -> void {
     parms = ParseInput(command);
     state_subject_->Change(command);
     if (!kCommandMap.contains(parms[0])) {
+      last_command_ = CommandType::kInvalid;
       PrintErr("Invalid input!");
       continue;
     }
@@ -156,6 +158,7 @@ auto MarkdownEditor::Launch() -> void {
         break;
       }
     }
+    last_command_ = type;
   }
 }
 
@@ -229,9 +232,10 @@ auto MarkdownEditor::CloseFile(int n) -> void {
         mdfiles_[n]->Save();
         break;
       }
-      if (ans != "n") {
-        PrintErr("Invalid input");
+      if (ans == "n") {
+        break;
       }
+      PrintErr("Invalid input");
     }
   }
 
@@ -300,7 +304,9 @@ auto MarkdownEditor::Undo() -> void {
 
 auto MarkdownEditor::Redo() -> void {
   if (redo_map_.contains(cur_file_url_)) {
-    redo_map_[cur_file_url_]->Redo();
+    if (last_command_ == CommandType::kUndo) {
+      redo_map_[cur_file_url_]->Redo();
+    }
     redo_map_.erase(cur_file_url_);
   }
 }

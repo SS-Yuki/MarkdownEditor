@@ -6,6 +6,7 @@
 #define STATS_LOG "stats.log"
 class MdFile;
 enum CommandType {
+  kInvalid,
   kLoad,
   kSave,
   kWs,

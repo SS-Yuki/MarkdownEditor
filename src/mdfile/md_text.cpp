@@ -26,7 +26,7 @@ auto MdText::HasChild() -> bool { return false; }
 auto MdText::Add(std::shared_ptr<MdElem> mdep) -> void {}
 
 auto MdText::Display(int depth, int flag) -> void {
-  PrintTreeElem(mdes_.content, depth, flag);
+  PrintTreeElem(mdes_.str, depth, flag);
 }
 
 auto MdText::Clear() -> void {}
