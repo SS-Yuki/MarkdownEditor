@@ -15,42 +15,32 @@
 
 #include "appendhead_cmd.h"
 #include "appendtail_cmd.h"
+#include "common.h"
 #include "delete_cmd.h"
 #include "edit_cmd.h"
+#include "history_observer.h"
 #include "insert_cmd.h"
 #include "md_file.h"
+#include "state_subject.h"
+#include "stats_observer.h"
 #include "utils.h"
 
-MarkdownEditor::MarkdownEditor() : cur_file_no_(-1) {}
+MarkdownEditor::MarkdownEditor() : cur_file_no_(-1) {
+  state_subject_ = std::make_shared<StateSubject>(mdfiles_);
+  std::string history_path = std::string(LOG_PATH) + std::string(HISTORY_LOG);
+  std::string stats_path = std::string(LOG_PATH) + std::string(STATS_LOG);
+  state_subject_->Add(std::make_shared<HistoryObserver>(history_path));
+  state_subject_->Add(std::make_shared<StatsObserver>(stats_path));
+}
 
 MarkdownEditor::~MarkdownEditor() = default;
-
-const std::unordered_map<std::string, CommandType> MarkdownEditor::kCommandMap =
-    {{"load", CommandType::kLoad},
-     {"save", CommandType::kSave},
-     {"ws", CommandType::kWs},
-     {"switch", CommandType::kSwitch},
-     {"close", CommandType::kClose},
-
-     {"insert", CommandType::kInsert},
-     {"append-head", CommandType::kAppendHead},
-     {"append-tail", CommandType::kAppendTail},
-     {"delete", CommandType::kDelete},
-     {"undo", CommandType::kUndo},
-     {"redo", CommandType::kRedo},
-
-     {"list", CommandType::kList},
-     {"list-tree", CommandType::kListTree},
-     {"dir-tree", CommandType::kDirTree},
-
-     {"history", CommandType::kHistory},
-     {"stats", CommandType::kStats}};
 
 auto MarkdownEditor::Launch() -> void {
   std::string command;
   std::vector<std::string> parms;
   while (std::getline(std::cin, command)) {
     parms = ParseInput(command);
+    state_subject_->Change(command);
     if (!kCommandMap.contains(parms[0])) {
       PrintErr("Invalid input!");
       continue;
@@ -147,6 +137,10 @@ auto MarkdownEditor::Launch() -> void {
           PrintErr("Usage: switch [n]");
         }
         ShowStats();
+        break;
+      }
+      case kExit: {
+        exit(0);
         break;
       }
 

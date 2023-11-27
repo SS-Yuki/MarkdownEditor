@@ -15,7 +15,7 @@ class UnsavedSym : public BaseSym<T> {
     return base_sym_->Show(obj) + "*";
   }
 
-  //  private:
+ private:
   std::unique_ptr<BaseSym<T>> base_sym_;
 };
 
@@ -28,6 +28,6 @@ class CurSym : public BaseSym<T> {
     return base_sym_->Show(obj) + "<";
   }
 
-  //  private:
+ private:
   std::unique_ptr<BaseSym<T>> base_sym_;
 };

@@ -6,41 +6,23 @@
 #include <unordered_map>
 #include <vector>
 
-#include "edit_cmd.h"
-#include "md_file.h"
-
-enum CommandType {
-  kLoad,
-  kSave,
-  kWs,
-  kSwitch,
-  kClose,
-  kInsert,
-  kAppendHead,
-  kAppendTail,
-  kDelete,
-  kUndo,
-  kRedo,
-  kList,
-  kListTree,
-  kDirTree,
-  kHistory,
-  kStats
-};
-
+class StateSubject;
+class EditCmd;
+class MdFile;
 class MarkdownEditor {
  public:
   MarkdownEditor();
   ~MarkdownEditor();
   auto Launch() -> void;
 
-  //  private:
+ private:
   std::vector<std::shared_ptr<MdFile>> mdfiles_;
   std::unordered_map<std::string, std::shared_ptr<EditCmd>> undo_map_;
   std::unordered_map<std::string, std::shared_ptr<EditCmd>> redo_map_;
   int cur_file_no_;
   std::string cur_file_url_;
-  const static std::unordered_map<std::string, CommandType> kCommandMap;
+
+  std::shared_ptr<StateSubject> state_subject_;
 
   auto LoadFile(const std::string& url) -> void;
   auto SaveFile() -> void;

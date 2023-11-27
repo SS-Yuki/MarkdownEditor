@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
-#include "md_file.h"
+class MdFile;
 class EditCmd {
  public:
   virtual auto Exec() -> bool = 0;
@@ -10,7 +11,7 @@ class EditCmd {
   virtual auto Redo() -> void = 0;
   virtual ~EditCmd() = default;
 
-  //  private:
+ protected:
   std::shared_ptr<MdFile> mdf_;
   std::string command_str_;
   std::vector<std::string> parms_;

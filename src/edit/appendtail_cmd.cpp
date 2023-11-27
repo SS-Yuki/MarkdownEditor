@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "utils.h"
+#include "md_file.h"
 
 AppendTailCmd::AppendTailCmd(const std::shared_ptr<MdFile>& mdf,
                              const std::string& command_str,

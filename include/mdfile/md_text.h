@@ -10,6 +10,4 @@ class MdText : public MdElem {
   auto Clear() -> void override;
   auto Display(int depth, int flag) -> void override;
   [[nodiscard]] auto content() const -> std::string;
-
-  //  private:
 };

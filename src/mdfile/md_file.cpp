@@ -1,5 +1,6 @@
 #include "md_file.h"
 
+#include <chrono>
 #include <climits>
 #include <fstream>
 #include <iostream>
@@ -7,15 +8,16 @@
 #include <stack>
 #include <string>
 
-#include "base_sym.h"
 #include "concrete_sym.h"
 #include "elem_list.h"
-#include "md_elem.h"
 #include "md_text.h"
 #include "md_title.h"
 
 MdFile::MdFile(const std::string& url, bool unsaved)
-    : url_(url), unsaved_(unsaved), cur_(true) {
+    : url_(url),
+      unsaved_(unsaved),
+      cur_(true),
+      start_tp_(std::chrono::system_clock::now()) {
   root_ = std::make_unique<MdTitle>();
   list_ = std::make_unique<ElemList>();
   std::ifstream ifs(url, std::ios::in);
@@ -79,6 +81,9 @@ auto MdFile::url() const -> std::string { return url_; }
 auto MdFile::unsaved() const -> bool { return unsaved_; }
 auto MdFile::set_unsaved(bool unsaved) -> void { unsaved_ = unsaved; }
 auto MdFile::set_cur(bool cur) -> void { cur_ = cur; }
+auto MdFile::start_tp() -> std::chrono::system_clock::time_point {
+  return start_tp_;
+}
 auto MdFile::UrlShow::Show(const MdFile* mdf) const -> std::string {
   return mdf->url();
 }

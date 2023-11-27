@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "edit_cmd.h"
-#include "md_file.h"
+class MdFile;
 class AppendTailCmd : public EditCmd {
  public:
   AppendTailCmd(const std::shared_ptr<MdFile>& mdf,
@@ -15,6 +15,4 @@ class AppendTailCmd : public EditCmd {
   auto Exec() -> bool override;
   auto Undo() -> void override;
   auto Redo() -> void override;
-
-  // private:
 };

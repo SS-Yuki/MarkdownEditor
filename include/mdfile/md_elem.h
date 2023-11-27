@@ -13,9 +13,7 @@ struct MdElemString {
 
 class MdElem {
  public:
-  explicit MdElem() : parent_(nullptr) {}
-  explicit MdElem(std::shared_ptr<MdElem> parent)
-      : parent_(std::move(parent)) {}
+  explicit MdElem() = default;
   virtual ~MdElem() = default;
   virtual auto HasChild() -> bool = 0;
   virtual auto Add(std::shared_ptr<MdElem> mdep) -> void = 0;
@@ -29,8 +27,7 @@ class MdElem {
   }
   [[nodiscard]] auto level() const -> int { return level_; }
 
-  //  private:
-  std::shared_ptr<MdElem> parent_;
+ protected:
   MdElemString mdes_;
   int level_;
 };

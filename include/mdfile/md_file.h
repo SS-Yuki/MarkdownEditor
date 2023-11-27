@@ -1,13 +1,14 @@
 #pragma once
 
+#include <chrono>
 #include <memory>
 #include <sstream>
 #include <string>
 
 #include "base_sym.h"
-#include "elem_list.h"
-#include "md_elem.h"
 
+class MdElem;
+class ElemList;
 class MdFile {
  public:
   explicit MdFile(const std::string& url, bool unsaved);
@@ -22,6 +23,7 @@ class MdFile {
   [[nodiscard]] auto unsaved() const -> bool;
   auto set_unsaved(bool unsaved) -> void;
   auto set_cur(bool cur) -> void;
+  auto start_tp() -> std::chrono::system_clock::time_point;
   /*
   InsertInList
   modify: insert是否造成了修改(初始化的插入不造成修改)
@@ -45,12 +47,13 @@ class MdFile {
                     std::string* elem_str = nullptr, bool* unsaved = nullptr)
       -> bool;
 
-  //  private:
+ private:
   bool unsaved_;
   bool cur_;
   std::string url_;
   std::unique_ptr<ElemList> list_;
   std::unique_ptr<MdElem> root_;
+  std::chrono::system_clock::time_point start_tp_;
   class UrlShow : public BaseSym<MdFile> {
    public:
     [[nodiscard]] auto Show(const MdFile* mdf) const -> std::string override;

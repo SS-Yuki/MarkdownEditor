@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "md_elem.h"
 #include "utils.h"
 
 MdText::MdText(const std::string& elem_str) {

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "md_elem.h"
 #include "utils.h"
 
 MdTitle::MdTitle() { level_ = 0; }

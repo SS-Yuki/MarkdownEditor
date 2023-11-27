@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "appendtail_cmd.h"
 #include "edit_cmd.h"
-#include "md_file.h"
+class MdFile;
 class AppendHeadCmd : public EditCmd {
  public:
   AppendHeadCmd(const std::shared_ptr<MdFile>& mdf,
@@ -16,6 +15,4 @@ class AppendHeadCmd : public EditCmd {
   auto Exec() -> bool override;
   auto Undo() -> void override;
   auto Redo() -> void override;
-
-  // private:
 };

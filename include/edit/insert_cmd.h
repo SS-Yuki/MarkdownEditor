@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "edit_cmd.h"
-#include "md_file.h"
+class MdFile;
 class InsertCmd : public EditCmd {
  public:
   InsertCmd(const std::shared_ptr<MdFile>& mdf, const std::string& command_str,
@@ -14,6 +14,4 @@ class InsertCmd : public EditCmd {
   auto Exec() -> bool override;
   auto Undo() -> void override;
   auto Redo() -> void override;
-
-  // private:
 };

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "md_file.h"
 #include "utils.h"
 
 InsertCmd::InsertCmd(const std::shared_ptr<MdFile>& mdf,

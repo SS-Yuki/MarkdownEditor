@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "md_file.h"
 #include "utils.h"
 
 DeleteCmd::DeleteCmd(const std::shared_ptr<MdFile>& mdf,

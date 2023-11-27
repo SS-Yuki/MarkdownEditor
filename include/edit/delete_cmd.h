@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "edit_cmd.h"
-#include "md_file.h"
+class MdFile;
 class DeleteCmd : public EditCmd {
  public:
   DeleteCmd(const std::shared_ptr<MdFile>& mdf, const std::string& command_str,
@@ -15,6 +15,6 @@ class DeleteCmd : public EditCmd {
   auto Undo() -> void override;
   auto Redo() -> void override;
 
-  // private:
+ private:
   std::string content_;
 };

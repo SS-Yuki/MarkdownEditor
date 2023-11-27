@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "md_elem.h"
+class MdElem;
 class ElemList {
  public:
   ElemList();

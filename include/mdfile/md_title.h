@@ -14,6 +14,6 @@ class MdTitle : public MdElem {
   auto Clear() -> void override;
   [[nodiscard]] auto content() const -> std::string;
 
-  //  private:
+ private:
   std::list<std::shared_ptr<MdElem>> children_list_;
 };
