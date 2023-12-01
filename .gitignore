@@ -2,3 +2,7 @@ build/
 .cache/
 other/
 .vscode/
+test/*.out
+test/*.md
+test/md_editor
+logs/*
