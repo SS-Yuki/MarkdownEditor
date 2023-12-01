@@ -1,8 +1,9 @@
 #!/bin/bash
 
-cp ../build/md_editor ./md_editor
 rm -f *.md
 rm -f *.out
+rm ./md_editor
+cp ../build/md_editor ./md_editor
 
 program="./md_editor"
 
