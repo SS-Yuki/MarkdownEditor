@@ -14,6 +14,10 @@ MdText::MdText(const std::string& elem_str) {
   mdes_.content = elem_str.substr(pos, len - pos);
   mdes_.content.erase(0, mdes_.content.find_first_not_of(' '));
   mdes_.str = elem_str;
+  tree_str_ =
+      (mdes_.prefix == "*" || mdes_.prefix == "+" || mdes_.prefix == "-")
+          ? (std::string("· ") + mdes_.content)
+          : elem_str;
   level_ = INT_MAX;
 }
 
@@ -26,7 +30,7 @@ auto MdText::HasChild() -> bool { return false; }
 auto MdText::Add(std::shared_ptr<MdElem> mdep) -> void {}
 
 auto MdText::Display(int depth, int flag) -> void {
-  PrintTreeElem(mdes_.str, depth, flag);
+  PrintTreeElem(tree_str_, depth, flag);
 }
 
 auto MdText::Clear() -> void {}

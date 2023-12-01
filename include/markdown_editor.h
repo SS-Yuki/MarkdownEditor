@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "common.h"
@@ -24,7 +25,9 @@ class MarkdownEditor {
   std::unordered_map<std::string, std::shared_ptr<EditCmd>> redo_map_;
   int cur_file_no_;
   std::string cur_file_url_;
-  CommandType last_command_;
+  static std::unordered_set<CommandType> file_command_set_;
+  static std::unordered_set<CommandType> edit_command_set_;
+  static std::unordered_set<CommandType> show_command_set_;
 
   std::shared_ptr<StateSubject> state_subject_;
 

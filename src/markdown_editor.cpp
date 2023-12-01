@@ -26,8 +26,17 @@
 #include "stats_observer.h"
 #include "utils.h"
 
-MarkdownEditor::MarkdownEditor()
-    : cur_file_no_(-1), last_command_(CommandType::kInvalid) {
+std::unordered_set<CommandType> MarkdownEditor::file_command_set_ = {
+    CommandType::kLoad, CommandType::kSave, CommandType::kWs,
+    CommandType::kSwitch, CommandType::kClose};
+std::unordered_set<CommandType> MarkdownEditor::edit_command_set_ = {
+    CommandType::kInsert, CommandType::kAppendHead, CommandType::kAppendTail,
+    CommandType::kDelete, CommandType::kUndo,       CommandType::kRedo};
+std::unordered_set<CommandType> MarkdownEditor::show_command_set_ = {
+    CommandType::kList, CommandType::kListTree, CommandType::kDirTree,
+    CommandType::kHistory, CommandType::kStats};
+
+MarkdownEditor::MarkdownEditor() : cur_file_no_(-1) {
   state_subject_ = std::make_shared<StateSubject>(mdfiles_);
   std::string history_path = std::string(LOG_PATH) + std::string(HISTORY_LOG);
   std::string stats_path = std::string(LOG_PATH) + std::string(STATS_LOG);
@@ -40,15 +49,22 @@ MarkdownEditor::~MarkdownEditor() = default;
 auto MarkdownEditor::Launch() -> void {
   std::string command;
   std::vector<std::string> parms;
+
   while (std::getline(std::cin, command)) {
     parms = ParseInput(command);
     state_subject_->Change(command);
     if (!kCommandMap.contains(parms[0])) {
-      last_command_ = CommandType::kInvalid;
       PrintErr("Invalid input!");
       continue;
     }
     const CommandType type = kCommandMap.at(parms[0]);
+    if (file_command_set_.contains(type)) {
+      undo_map_.clear();
+      redo_map_.clear();
+    }
+    if (edit_command_set_.contains(type) && type != CommandType::kRedo) {
+      redo_map_.clear();
+    }
     switch (type) {
       case kLoad: {
         if (parms.size() < 2) {
@@ -158,7 +174,6 @@ auto MarkdownEditor::Launch() -> void {
         break;
       }
     }
-    last_command_ = type;
   }
 }
 
@@ -304,9 +319,7 @@ auto MarkdownEditor::Undo() -> void {
 
 auto MarkdownEditor::Redo() -> void {
   if (redo_map_.contains(cur_file_url_)) {
-    if (last_command_ == CommandType::kUndo) {
-      redo_map_[cur_file_url_]->Redo();
-    }
+    redo_map_[cur_file_url_]->Redo();
     redo_map_.erase(cur_file_url_);
   }
 }
@@ -335,7 +348,7 @@ auto MarkdownEditor::ShowHistory(int num) -> void {
   log_items.pop_back();
   int start = log_items.size() - num;
   start = (start < 0) ? 0 : start;
-  for (int i = start; i < log_items.size(); i++) {
+  for (int i = log_items.size() - 1; i >= start; i--) {
     std::cout << log_items[i] << std::endl;
   }
   log_file.close();

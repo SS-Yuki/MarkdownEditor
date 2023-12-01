@@ -1,6 +1,7 @@
 #pragma once
 
 #include "md_elem.h"
+#include <string>
 class MdText : public MdElem {
  public:
   explicit MdText(const std::string &elem_str);
@@ -10,4 +11,7 @@ class MdText : public MdElem {
   auto Clear() -> void override;
   auto Display(int depth, int flag) -> void override;
   [[nodiscard]] auto content() const -> std::string;
+
+  private:
+  std::string tree_str_;
 };
